@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sortingTypeSelectionMenu_item_settings"
+        android:title="@string/values_string_sortingTypeMenuSettings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/sortingTypeSelectionMenu_item_sortingTypes"
+        android:title="@string/values_string_sortingTypeMenuSortingTypes"
+        android:icon="@drawable/ic_baseline_sort_24"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/sortingTypeSelectionMenu_item_sortByName"
+                    android:icon="@drawable/ic_baseline_sort_by_alpha_24"
+                    android:title="@string/values_string_sortingTypeMenuSortByName" />
+
+                <item
+                    android:id="@+id/sortingTypeSelectionMenu_item_sortByImportance"
+                    android:icon="@drawable/ic_baseline_format_list_numbered_24"
+                    android:title="@string/values_string_sortingTypeMenuSortByImportance" />
+
+                <item
+                    android:id="@+id/sortingTypeSelectionMenu_item_sortByTime"
+                    android:title="@string/values_string_sortingTypeMenuSortByTime"
+                    android:icon="@drawable/ic_baseline_access_time_24" />
+            </group>
+        </menu>
+    </item>
+</menu>

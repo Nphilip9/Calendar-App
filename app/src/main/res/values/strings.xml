@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Calendar</string>
+
+    <!-- sorting type menu -->
+    <string name="values_string_sortingTypeMenuSortingTypes">Sortieren</string>
+    <string name="values_string_sortingTypeMenuSortByName">Sortiere nach Namen</string>
+    <string name="values_string_sortingTypeMenuSortByImportance">Sortiere nach Wichtigkeit</string>
+    <string name="values_string_sortingTypeMenuSortByTime">Sortiere nach Zeit</string>
+    <string name="values_string_sortingTypeMenuSettings">Einstellungen</string>
+
+</resources>
