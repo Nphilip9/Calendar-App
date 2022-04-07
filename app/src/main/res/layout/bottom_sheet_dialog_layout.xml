@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="350dp"
-    android:background="@drawable/bottom_sheet_design">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    app:cardCornerRadius="12sp"
+    app:cardUseCompatPadding="true">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="10dp"
+        android:text="edit Task"
+        app:icon="@drawable/ic_baseline_edit_24" />
 
     <TextView
         android:id="@+id/bottomSheetDialogLayout_textView_title"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="385dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,9 +33,11 @@
 
     <TextView
         android:id="@+id/bottomSheetDialogLayout_textView_description"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="385dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="55dp"
+        android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,9 +45,11 @@
 
     <TextView
         android:id="@+id/bottomSheetDialogLayout_textView_date"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="385dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,9 +57,11 @@
 
     <TextView
         android:id="@+id/bottomSheetDialogLayout_textView_importance"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="385dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="145dp"
+        android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,10 +69,10 @@
 
     <View
         android:id="@+id/divider3"
-        android:layout_width="409dp"
+        android:layout_width="399dp"
         android:layout_height="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/list_view_divider_design"
@@ -62,10 +83,10 @@
 
     <View
         android:id="@+id/divider4"
-        android:layout_width="409dp"
+        android:layout_width="399dp"
         android:layout_height="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="97dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/list_view_divider_design"
@@ -76,10 +97,10 @@
 
     <View
         android:id="@+id/divider5"
-        android:layout_width="409dp"
+        android:layout_width="399dp"
         android:layout_height="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="142dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/list_view_divider_design"
@@ -90,9 +111,11 @@
 
     <TextView
         android:id="@+id/bottomSheetDialogLayout_textView_isDone"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="385dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="190dp"
+        android:gravity="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,10 +123,10 @@
 
     <View
         android:id="@+id/divider7"
-        android:layout_width="409dp"
+        android:layout_width="399dp"
         android:layout_height="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="187dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/list_view_divider_design"
@@ -112,4 +135,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomSheetDialogLayout_textView_importance" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

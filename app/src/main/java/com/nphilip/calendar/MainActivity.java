@@ -2,8 +2,6 @@ package com.nphilip.calendar;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.hardware.biometrics.BiometricPrompt;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
@@ -14,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +23,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nphilip.calendar.fragment.BottomSheetFragment;
 import com.nphilip.calendar.listView.ListViewAdapter;
 import com.nphilip.calendar.listView.Task;
 import com.nphilip.calendar.manager.TaskManager;
@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
      * ListAdapter is set in the method "initListView()"
      */
     ListView mainActivity_listView_tasks;
+
+    SearchView mainActivity_searchView_searchTask;
 
     /*
      * ArrayList contains all tasks (from Object "Task") from the selected date (selected date from CalendarView)
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivity_calendarView_calendar = findViewById(R.id.mainActivity_calendarView_calendar);
         mainActivity_fab_addTask = findViewById(R.id.mainActivity_fab_addTask);
         mainActivity_listView_tasks = findViewById(R.id.mainActivity_listView_tasks);
+        mainActivity_searchView_searchTask = findViewById(R.id.mainActivity_searchView_searchTask);
 
         /*
          * Creating the date formatter and passing the parameters String dateFormat and the time zone
@@ -109,18 +112,6 @@ public class MainActivity extends AppCompatActivity {
          */
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.ITALY);
         selectedDate = simpleDateFormat.format(new Date(mainActivity_calendarView_calendar.getDate()));
-
-        /*
-         * Getting the actionBar by calling getSupportActionBar() to modify it's design
-         * Changing the color of the actionBar to "#091C32" after parsing it from String(Hexadecimal) to int(RGB)
-         * Supported formats would be: #RRGGBB or #AARRGGBB, String must start with #
-         * #RRGGBB ==> (RR: red, GG: green, BB: blue)
-         * #AARRGGBB ==> (AA: alpha, RR: red, GG: green, BB: blue)
-         * Objects.requireNonNull() needed because actionbar could not be found however it still throws a NullPointerException
-         */
-        final ActionBar actionBar = getSupportActionBar();
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#091C32"));
-        Objects.requireNonNull(actionBar).setBackgroundDrawable(colorDrawable);
 
         /*
          * Setting darkMode as default design
@@ -142,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("SortingType", MODE_PRIVATE);
         sharedPreferences = getSharedPreferences("ClickedItem", MODE_PRIVATE);
 
+        /*
+         *
+         */
         mainActivity_calendarView_calendar.setOnDateChangeListener((calendarView, year, month, day) -> {
             if(month < 10) {
                 selectedDate = day + "/" + "0" + (month + 1) + "/" + year;
@@ -149,10 +143,12 @@ public class MainActivity extends AppCompatActivity {
                 selectedDate = day + "/" + (month + 1) + "/" + year;
             }
             initListView();
+
         });
 
         mainActivity_fab_addTask.setOnClickListener(v -> {
-
+            BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
+            bottomSheetFragment.show(getSupportFragmentManager(), "Bottom sheet dialog");
         });
 
         mainActivity_listView_tasks.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -202,6 +198,19 @@ public class MainActivity extends AppCompatActivity {
             saveClickedItemID(i);
         });
 
+        mainActivity_searchView_searchTask.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title", "description", "27/03/2022", 1, true, false));
         new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title1", "description", "8/02/2020", 1, false, true));
         new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title2", "description", "27/03/2022", 1, false, true));
@@ -214,22 +223,8 @@ public class MainActivity extends AppCompatActivity {
      * @param itemID Integer
      */
     private void showBottomSheetDialog(int itemID) {
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
-
-        TextView bottomSheetDialogLayout_textView_title = bottomSheetDialog.findViewById(R.id.bottomSheetDialogLayout_textView_title);
-        TextView bottomSheetDialogLayout_textView_description = bottomSheetDialog.findViewById(R.id.bottomSheetDialogLayout_textView_description);
-        TextView bottomSheetDialogLayout_textView_date = bottomSheetDialog.findViewById(R.id.bottomSheetDialogLayout_textView_date);
-        TextView bottomSheetDialogLayout_textView_importance = bottomSheetDialog.findViewById(R.id.bottomSheetDialogLayout_textView_importance);
-        TextView bottomSheetDialogLayout_textView_isDone = bottomSheetDialog.findViewById(R.id.bottomSheetDialogLayout_textView_isDone);
-
-        Objects.requireNonNull(bottomSheetDialogLayout_textView_title).setText(tasks.get(itemID).getTitle());
-        Objects.requireNonNull(bottomSheetDialogLayout_textView_description).setText(tasks.get(itemID).getContent());
-        Objects.requireNonNull(bottomSheetDialogLayout_textView_date).setText(tasks.get(itemID).getDate());
-        Objects.requireNonNull(bottomSheetDialogLayout_textView_importance).setText(String.valueOf(tasks.get(itemID).getImportance()));
-        Objects.requireNonNull(bottomSheetDialogLayout_textView_isDone).setText(tasks.get(itemID).isDone() ? "Done" : "Not Done");
-
-        bottomSheetDialog.show();
+        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
+        bottomSheetFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog");
     }
 
     /**

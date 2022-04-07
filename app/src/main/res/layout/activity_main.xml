@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="#1F1F1F"
     tools:context=".MainActivity">
 
     <CalendarView
@@ -12,12 +12,13 @@
         style="@android:style/Widget.DeviceDefault.CalendarView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/calendar_view_design"
         android:forceHasOverlappingRendering="false"
         android:weekDayTextAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mainActivity_searchView_searchTask" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainActivity_fab_addTask"
@@ -41,5 +42,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainActivity_calendarView_calendar" />
+
+    <SearchView
+        android:id="@+id/mainActivity_searchView_searchTask"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/search_view_design"
+        android:contextClickable="true"
+        android:queryBackground="@null"
+        android:queryHint="Suche..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
