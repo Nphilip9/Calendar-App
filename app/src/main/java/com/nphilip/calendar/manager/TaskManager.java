@@ -96,7 +96,7 @@ public class TaskManager {
     public void addTask(String path, Task task) {
         try {
             FileWriter fileWriter = new FileWriter(path, true);
-            fileWriter.append(task.getTitle()).append("##").append(task.getContent()).append("##").append(task.getDate()).append("##").append(String.valueOf(task.getImportance())).append("##").append(String.valueOf(task.isProtected())).append("##").append(String.valueOf(task.isDone())).append("\n");
+            fileWriter.append(task.getTitle()).append("##").append(task.getDescription()).append("##").append(task.getDate()).append("##").append(String.valueOf(task.getImportance())).append("##").append(String.valueOf(task.isProtected())).append("##").append(String.valueOf(task.isDone())).append("\n");
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

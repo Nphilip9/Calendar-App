@@ -13,15 +13,12 @@ import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nphilip.calendar.fragment.BottomSheetFragment;
 import com.nphilip.calendar.listView.ListViewAdapter;
@@ -31,7 +28,6 @@ import com.nphilip.calendar.manager.TaskManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -147,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mainActivity_fab_addTask.setOnClickListener(v -> {
-            BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
-            bottomSheetFragment.show(getSupportFragmentManager(), "Bottom sheet dialog");
+            showBottomSheetDialog(1);
         });
 
         mainActivity_listView_tasks.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -198,15 +193,18 @@ public class MainActivity extends AppCompatActivity {
             saveClickedItemID(i);
         });
 
+        mainActivity_searchView_searchTask.setOnClickListener(view -> mainActivity_searchView_searchTask.setIconified(false));
+
         mainActivity_searchView_searchTask.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
+                System.out.println(s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                System.out.println(s);
                 return false;
             }
         });
@@ -223,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
      * @param itemID Integer
      */
     private void showBottomSheetDialog(int itemID) {
-        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
+        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(tasks.get(itemID));
         bottomSheetFragment.show(getSupportFragmentManager(), "Bottom Sheet Dialog");
     }
 

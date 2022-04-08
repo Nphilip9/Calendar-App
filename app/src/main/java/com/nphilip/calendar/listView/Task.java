@@ -44,7 +44,7 @@ public class Task {
      * Returns the description
      * @return String
      */
-    public String getContent() {
+    public String getDescription() {
         return description;
     }
 
@@ -52,7 +52,7 @@ public class Task {
       * Sets the description
      * @param description String
      */
-    public void setContent(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

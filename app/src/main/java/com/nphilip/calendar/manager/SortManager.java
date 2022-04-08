@@ -19,7 +19,7 @@ public class SortManager {
         String[][] unsortedTasksPrimitiveList = new String[unsortedTasks.size()][6];
         for (int i = 0; i < unsortedTasks.size(); i++) {
             unsortedTasksPrimitiveList[i][0] = unsortedTasks.get(i).getTitle();
-            unsortedTasksPrimitiveList[i][1] = unsortedTasks.get(i).getContent();
+            unsortedTasksPrimitiveList[i][1] = unsortedTasks.get(i).getDescription();
             unsortedTasksPrimitiveList[i][2] = unsortedTasks.get(i).getDate();
             unsortedTasksPrimitiveList[i][3] = String.valueOf(unsortedTasks.get(i).getImportance());
             unsortedTasksPrimitiveList[i][4] = String.valueOf(unsortedTasks.get(i).isProtected());
