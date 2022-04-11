@@ -22,5 +22,9 @@ public enum SortingTypes {
      * Format of the time is: hh:mm:ss the format is not going to change
      * It's also the default sorting algorithm
      */
-    SORT_BY_TIME
+    SORT_BY_TIME,
+
+    SORT_BY_DATE,
+
+    SORT_BY_ID
 }

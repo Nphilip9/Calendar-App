@@ -3,14 +3,13 @@ package com.nphilip.calendar;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.hardware.biometrics.BiometricPrompt;
-import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -23,11 +22,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nphilip.calendar.fragment.BottomSheetFragment;
 import com.nphilip.calendar.listView.ListViewAdapter;
 import com.nphilip.calendar.listView.Task;
+import com.nphilip.calendar.listeners.SwipeListViewTouchListener;
 import com.nphilip.calendar.manager.TaskManager;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * Default date is always the date of today
      * CalendarView is initialized in the main function (onCreate)
      */
-    CalendarView mainActivity_calendarView_calendar;
+    com.prolificinteractive.materialcalendarview.MaterialCalendarView mainActivity_calendarView_calendar;
 
     /*
      * FloatingActionButton is used to start the add activity on click
@@ -54,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
      */
     ListView mainActivity_listView_tasks;
 
+    /*
+    * Not implemented yet
+    */
     SearchView mainActivity_searchView_searchTask;
 
     /*
@@ -78,14 +86,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private String selectedDate;
 
-    /*
-     * Constant value(unmodifiable), it defines the date format
-     * Format: dd/MM/yyyy --> day/month/year ==> example: 28/03/2022
-     */
-    private final static String DATE_FORMAT = "dd/MM/yyyy";
-
     @RequiresApi(api = Build.VERSION_CODES.P)
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,13 +103,18 @@ public class MainActivity extends AppCompatActivity {
         mainActivity_listView_tasks = findViewById(R.id.mainActivity_listView_tasks);
         mainActivity_searchView_searchTask = findViewById(R.id.mainActivity_searchView_searchTask);
 
+        mainActivity_calendarView_calendar.setSelectedDate(CalendarDay.today());
+        mainActivity_calendarView_calendar.setAllowClickDaysOutsideCurrentMonth(false);
+
         /*
-         * Creating the date formatter and passing the parameters String dateFormat and the time zone
-         * SimpleDateFormat is needed to format the format the getDate() -> return long method to a user friendly string
-         * Passing the formatted date to the selectedDate variable
+         * All months from 0 - 9 are written without a zero (January: 1, February: 2, ...) but the code expects it with zero (January: 01, February: 02, ...)
+         * With the ? operator we can check if the month is less then 10, if yes we assign a zero to the month, if no we don't assign a zero to the month
          */
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.ITALY);
-        selectedDate = simpleDateFormat.format(new Date(mainActivity_calendarView_calendar.getDate()));
+        selectedDate = Integer.parseInt(String.valueOf(mainActivity_calendarView_calendar.getCurrentDate().getMonth())) < 10
+                ? mainActivity_calendarView_calendar.getCurrentDate().getDay() + "." + "0" + mainActivity_calendarView_calendar.getCurrentDate().getMonth() + "." + mainActivity_calendarView_calendar.getCurrentDate().getYear()
+                : mainActivity_calendarView_calendar.getCurrentDate().getDay() + "." + mainActivity_calendarView_calendar.getCurrentDate().getMonth() + "." + mainActivity_calendarView_calendar.getCurrentDate().getYear();
+
+        calendarViewDecorator();
 
         /*
          * Setting darkMode as default design
@@ -132,18 +139,16 @@ public class MainActivity extends AppCompatActivity {
         /*
          *
          */
-        mainActivity_calendarView_calendar.setOnDateChangeListener((calendarView, year, month, day) -> {
-            if(month < 10) {
-                selectedDate = day + "/" + "0" + (month + 1) + "/" + year;
-            } else {
-                selectedDate = day + "/" + (month + 1) + "/" + year;
-            }
-            initListView();
 
+        mainActivity_calendarView_calendar.setOnDateChangedListener((widget, date, selected) -> {
+            selectedDate = Integer.parseInt(String.valueOf(date.getMonth())) < 10
+                    ? date.getDay() + "." + "0" + date.getMonth() + "." + date.getYear()
+                    : date.getDay() + "." + date.getMonth() + "." + date.getYear();
+            initListView();
         });
 
         mainActivity_fab_addTask.setOnClickListener(v -> {
-            showBottomSheetDialog(1);
+
         });
 
         mainActivity_listView_tasks.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -198,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
         mainActivity_searchView_searchTask.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                System.out.println(s);
                 return false;
             }
 
@@ -209,9 +213,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title", "description", "27/03/2022", 1, true, false));
-        new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title1", "description", "8/02/2020", 1, false, true));
-        new TaskManager().addTask(getFilesDir() + "/Tasks.txt", new Task("Title2", "description", "27/03/2022", 1, false, true));
+        SwipeListViewTouchListener swipeListViewTouchListener = new SwipeListViewTouchListener(mainActivity_listView_tasks, new SwipeListViewTouchListener.OnSwipeCallback() {
+            @Override
+            public void onSwipeLeft(ListView listView, int[] reverseSortedPositions) {
+                new TaskManager().deleteTask(getFilesDir() + "/Tasks", tasks.get(reverseSortedPositions[0]).getDate(), reverseSortedPositions[0]);
+                initListView();
+                System.out.println(Arrays.toString(reverseSortedPositions));
+            }
+
+            @Override
+            public void onSwipeRight(ListView listView, int[] reverseSortedPositions) {
+                new TaskManager().deleteTask(getFilesDir() + "/Tasks", tasks.get(reverseSortedPositions[0]).getDate(), reverseSortedPositions[0]);
+                initListView();
+                System.out.println(Arrays.toString(reverseSortedPositions));
+            }
+        }, true, true);
+
+        mainActivity_listView_tasks.setOnTouchListener(swipeListViewTouchListener);
+        mainActivity_listView_tasks.setOnScrollListener(swipeListViewTouchListener.makeScrollListener());
+
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title", "description", "27.03.2022", 1, true, false));
+        new TaskManager().addTask(getFilesDir() + "/Tasks", new Task("Title2", "description", "27.03.2022", 1, false, true));
 
         initListView();
     }
@@ -258,10 +295,31 @@ public class MainActivity extends AppCompatActivity {
 
     //Initializes the ListView
     private void initListView() {
-        tasks = new TaskManager().getTaskFromDate(getFilesDir() + "/Tasks.txt", selectedDate);
+        tasks = new TaskManager().getTasksFromDate(getFilesDir() + "/Tasks", selectedDate);
         System.out.println(tasks);
         ListViewAdapter listViewAdapter = new ListViewAdapter(MainActivity.this, tasks);
         mainActivity_listView_tasks.setAdapter(listViewAdapter);
+    }
+
+    private void calendarViewDecorator() {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> runOnUiThread(() -> mainActivity_calendarView_calendar.addDecorator(new DayViewDecorator() {
+            @Override
+            public boolean shouldDecorate(CalendarDay day) {
+                ArrayList<Task> allTasks = new TaskManager().getAllTasks(getFilesDir().toString());
+                for (Task task : allTasks) {
+                    if(Integer.parseInt(task.getDate().split("\\.")[0]) == day.getDay() && Integer.parseInt(task.getDate().split("\\.")[1]) == day.getMonth() && Integer.parseInt(task.getDate().split("\\.")[2]) == day.getYear()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public void decorate(DayViewFacade view) {
+                view.addSpan(new DotSpan(10, getColor(R.color.purple_700)));
+            }
+        })), 1000);
     }
 
     /**

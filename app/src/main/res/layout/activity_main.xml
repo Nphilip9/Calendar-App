@@ -7,18 +7,20 @@
     android:background="#1F1F1F"
     tools:context=".MainActivity">
 
-    <CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/mainActivity_calendarView_calendar"
-        style="@android:style/Widget.DeviceDefault.CalendarView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="350dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/calendar_view_design"
-        android:forceHasOverlappingRendering="false"
-        android:weekDayTextAppearance="@style/TextAppearance.AppCompat.Small"
+        android:pointerIcon="wait"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainActivity_searchView_searchTask" />
+        app:layout_constraintTop_toBottomOf="@+id/mainActivity_searchView_searchTask"
+        app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:mcv_selectionColor="#673AB7"
+        app:mcv_selectionMode="single"
+        app:mcv_showOtherDates="all" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainActivity_fab_addTask"
@@ -31,29 +33,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <ListView
-        android:id="@+id/mainActivity_listView_tasks"
-        android:layout_width="410dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        android:divider="@drawable/list_view_divider_design"
-        android:dividerHeight="1sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainActivity_calendarView_calendar" />
-
     <SearchView
         android:id="@+id/mainActivity_searchView_searchTask"
         android:layout_width="400dp"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/search_view_design"
         android:contextClickable="true"
         android:queryBackground="@null"
         android:queryHint="Suche..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </SearchView>
+
+    <ListView
+        android:id="@+id/mainActivity_listView_tasks"
+        android:layout_width="wrap_content"
+        android:layout_height="334dp"
+        android:divider="@drawable/list_view_divider_design"
+        android:dividerHeight="1sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@ import java.util.Objects;
 public class SortManager {
 
     public String[][] startSorting(ArrayList<Task> unsortedTasks, SortingTypes sortingType) {
-        String[][] unsortedTasksPrimitiveList = new String[unsortedTasks.size()][6];
+        String[][] unsortedTasksPrimitiveList = new String[unsortedTasks.size()][7];
         for (int i = 0; i < unsortedTasks.size(); i++) {
             unsortedTasksPrimitiveList[i][0] = unsortedTasks.get(i).getTitle();
             unsortedTasksPrimitiveList[i][1] = unsortedTasks.get(i).getDescription();
@@ -31,8 +31,12 @@ public class SortManager {
                 return sortByName(unsortedTasksPrimitiveList);
             case SORT_BY_IMPORTANCE:
                 return sortByImportance(unsortedTasksPrimitiveList);
-            case SORT_BY_TIME:
+            case SORT_BY_DATE:
                 return sortByDate(unsortedTasksPrimitiveList);
+            case SORT_BY_TIME:
+                return sortByTime(unsortedTasksPrimitiveList);
+            case SORT_BY_ID:
+                return sortByID(unsortedTasksPrimitiveList);
         }
         return unsortedTasksPrimitiveList;
     }
@@ -66,7 +70,7 @@ public class SortManager {
      */
     private String[][] sortByDate(String[][] unsortedTasks) {
         try {
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             for (int i = 0; i < unsortedTasks.length; i++) {
                 for (int j = 0; j < unsortedTasks.length - 1; j++) {
                     Date date1 = sdf.parse(unsortedTasks[j][2]);
@@ -82,6 +86,16 @@ public class SortManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return unsortedTasks;
+    }
+
+    private String[][] sortByTime(String[][] unsortedTasksPrimitiveList) {
+        return null;
+    }
+
+    private String[][] sortByID(String[][] unsortedTasks) {
+        Arrays.sort(unsortedTasks, (first, second) -> second[6].compareTo(first[6]));
+        Collections.reverse(Arrays.asList(unsortedTasks));
         return unsortedTasks;
     }
 }

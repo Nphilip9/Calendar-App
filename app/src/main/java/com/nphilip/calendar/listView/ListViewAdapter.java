@@ -80,7 +80,7 @@ public class ListViewAdapter extends BaseAdapter  {
         }
 
         Task task = tasks.get(i);
-        String[] dateSplit = task.getDate().split("/");
+        String[] dateSplit = task.getDate().split("\\.");
 
         viewHolder.calendarItem_textView_itemContent.setText(task.getTitle());
 
